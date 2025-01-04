@@ -1,0 +1,528 @@
+﻿<UserControl
+    x:Class="Barbershop.UI.Views.Pages.Edit.CreateOrderPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:Barbershop.UI.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:local="clr-namespace:Barbershop.UI.Views.Pages.Edit"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="clr-namespace:Barbershop.Contracts.Models;assembly=Barbershop.Contracts"
+    xmlns:sys="clr-namespace:System;assembly=netstandard"
+    xmlns:vm="clr-namespace:Barbershop.UI.ViewModels.Pages.Edit"
+    x:Name="control"
+    Width="800"
+    Height="550"
+    MinWidth="800"
+    MinHeight="450"
+    d:Background="White"
+    d:DataContext="{d:DesignInstance vm:CreateOrderViewModel}"
+    mc:Ignorable="d">
+
+    <UserControl.Resources>
+        <DataTemplate x:Key="ServiceDataTemplate" DataType="models:ServiceDto">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition MinHeight="30" />
+                    <RowDefinition MinHeight="30" />
+                </Grid.RowDefinitions>
+
+                <TextBlock
+                    Grid.Row="0"
+                    Grid.ColumnSpan="2"
+                    VerticalAlignment="Center"
+                    FontSize="14"
+                    Text="{Binding Name}" />
+
+                <Grid Grid.Row="1">
+                    <Grid.DataContext>
+                        <MultiBinding Converter="{converters:ServiceDtoToServiceConverter}">
+                            <Binding Path="." />
+                            <Binding Path="DataContext.SelectedBarber" RelativeSource="{RelativeSource Mode=FindAncestor, AncestorType=UserControl}" />
+                        </MultiBinding>
+                    </Grid.DataContext>
+
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="100" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <hc:SimpleStackPanel
+                        Grid.Column="0"
+                        HorizontalAlignment="Left"
+                        Orientation="Horizontal">
+                        <Image
+                            Height="30"
+                            Margin="10,0,0,0"
+                            Source="{StaticResource TimerImage}" />
+                        <TextBlock VerticalAlignment="Center" Text="{Binding MinutesDuration, Converter={converters:IntToTimeStringConverter}}" />
+                    </hc:SimpleStackPanel>
+
+                    <hc:SimpleStackPanel
+                        Grid.Column="1"
+                        HorizontalAlignment="Left"
+                        Orientation="Horizontal">
+                        <Image
+                            Height="30"
+                            Margin="10,0,0,0"
+                            Source="{StaticResource MoneyImage}" />
+                        <TextBlock VerticalAlignment="Center" Text="{Binding Cost, Converter={converters:DecimalToCurrencyConverter}}" />
+                    </hc:SimpleStackPanel>
+
+                </Grid>
+            </Grid>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <hc:Interaction.Triggers>
+        <hc:EventTrigger EventName="Loaded">
+            <hc:InvokeCommandAction Command="{Binding LoadViewDataCommand}" />
+        </hc:EventTrigger>
+    </hc:Interaction.Triggers>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <hc:StepBar Grid.Row="0" StepIndex="{Binding SelectedTabIndex, Mode=OneWay}">
+            <hc:StepBarItem />
+            <hc:StepBarItem />
+            <hc:StepBarItem />
+            <hc:StepBarItem />
+            <hc:StepBarItem />
+        </hc:StepBar>
+
+        <hc:TabControl
+            Grid.Row="1"
+            Margin="0,10"
+            IsTabFillEnabled="True"
+            SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay}"
+            Style="{StaticResource TabControlInLine}">
+
+            <hc:TabItem Header="Выбор клиента" IsSelected="True">
+
+                <UniformGrid
+                    Margin="10"
+                    Columns="2"
+                    Rows="1">
+                    <DockPanel Margin="5">
+                        <hc:SearchBar
+                            hc:InfoElement.Placeholder="ФИО клиента / Номер телефона"
+                            hc:TitleElement.TitlePlacement="Left"
+                            DockPanel.Dock="Top"
+                            Style="{StaticResource SearchBarExtend}"
+                            Text="{Binding SearchClientText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <ListBox
+                            Margin="0,5,0,0"
+                            d:ItemsSource="{d:SampleData}"
+                            ItemsSource="{Binding ClientsView}"
+                            SelectedItem="{Binding SelectedClient, Mode=TwoWay}" />
+                    </DockPanel>
+
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <StackPanel.Resources>
+                            <Style BasedOn="{StaticResource TextBoxExtend}" TargetType="hc:TextBox">
+                                <Setter Property="Margin" Value="0,0,0,5" />
+                                <Setter Property="IsReadOnly" Value="True" />
+                            </Style>
+                        </StackPanel.Resources>
+
+
+                        <Image
+                            Width="150"
+                            Height="200"
+                            Source="{Binding SelectedClient.Photo, Converter={converters:BytesToImageConverter}}"
+                            Stretch="Uniform" />
+
+                        <TextBlock
+                            Margin="0,10,0,0"
+                            HorizontalAlignment="Center"
+                            FontSize="20">
+                            <Run d:Text="Фамилия" Text="{Binding SelectedClient.LastName}" />
+                            <Run d:Text="Имя" Text="{Binding SelectedClient.FirstName}" />
+                            <Run d:Text="Отчество" Text="{Binding SelectedClient.Surname}" />
+                        </TextBlock>
+
+                        <TextBlock
+                            Margin="0,10"
+                            HorizontalAlignment="Center"
+                            d:Text="Старший мастер"
+                            FontSize="14"
+                            Text="{Binding SelectedClient.PhoneNumber}" />
+
+                    </StackPanel>
+
+                </UniformGrid>
+
+            </hc:TabItem>
+
+            <hc:TabItem Header="Выбор мастера" IsEnabled="{Binding SelectedClient, Converter={StaticResource Object2BooleanConverter}}">
+
+                <UniformGrid
+                    Margin="10"
+                    Columns="2"
+                    Rows="1">
+                    <DockPanel Margin="5">
+                        <hc:SearchBar
+                            hc:InfoElement.Placeholder="ФИО мастера"
+                            hc:TitleElement.TitlePlacement="Left"
+                            DockPanel.Dock="Top"
+                            Style="{StaticResource SearchBarExtend}"
+                            Text="{Binding SearchBarberText, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        <ListBox
+                            Margin="0,5,0,0"
+                            d:ItemsSource="{d:SampleData}"
+                            ItemsSource="{Binding BarbersView}"
+                            SelectedItem="{Binding SelectedBarber, Mode=TwoWay}" />
+                    </DockPanel>
+
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <StackPanel.Resources>
+                            <Style BasedOn="{StaticResource TextBoxExtend}" TargetType="hc:TextBox">
+                                <Setter Property="Margin" Value="0,0,0,5" />
+                                <Setter Property="IsReadOnly" Value="True" />
+                            </Style>
+                        </StackPanel.Resources>
+
+                        <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="2">
+                            <Image
+                                Width="150"
+                                Height="200"
+                                Source="{Binding SelectedBarber.Photo, Converter={converters:BytesToImageConverter}}" />
+                        </Border>
+
+                        <TextBlock
+                            Margin="0,10,0,0"
+                            HorizontalAlignment="Center"
+                            FontSize="20">
+                            <Run d:Text="Фамилия" Text="{Binding SelectedBarber.LastName}" />
+                            <Run d:Text="Имя" Text="{Binding SelectedBarber.FirstName}" />
+                            <Run d:Text="Отчество" Text="{Binding SelectedBarber.Surname}" />
+                        </TextBlock>
+
+                        <TextBlock
+                            Margin="0,10"
+                            HorizontalAlignment="Center"
+                            d:Text="Старший мастер"
+                            FontSize="14"
+                            Text="{Binding SelectedBarber.SkillLevel, Converter={converters:EnumToDescriptionConverter}}" />
+
+                    </StackPanel>
+
+                </UniformGrid>
+            </hc:TabItem>
+
+            <hc:TabItem
+                Header="Выбор услуг"
+                IsEnabled="{Binding SelectedBarber, Converter={StaticResource Object2BooleanConverter}}"
+                IsSelected="True">
+
+                <Grid Margin="10">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="60" />
+                        <ColumnDefinition />
+                    </Grid.ColumnDefinitions>
+
+                    <ListBox
+                        Grid.Column="0"
+                        ItemTemplate="{StaticResource ServiceDataTemplate}"
+                        ItemsSource="{Binding Services}"
+                        SelectedItem="{Binding ServiceToSelect}"
+                        SelectionMode="Single">
+                        <hc:Interaction.Triggers>
+                            <hc:EventTrigger EventName="MouseDoubleClick">
+                                <hc:EventToCommand Command="{Binding SelectServiceCommand}" />
+                            </hc:EventTrigger>
+                        </hc:Interaction.Triggers>
+                    </ListBox>
+                    <ListBox
+                        x:Name="lstSelectedServices"
+                        Grid.Column="2"
+                        ItemTemplate="{StaticResource ServiceDataTemplate}"
+                        ItemsSource="{Binding SelectedServices}"
+                        SelectedItem="{Binding SelectedService}"
+                        SelectionMode="Single">
+                        <hc:Interaction.Triggers>
+                            <hc:EventTrigger EventName="MouseDoubleClick">
+                                <hc:EventToCommand Command="{Binding RemoveSelectedServiceCommand}" />
+                            </hc:EventTrigger>
+                        </hc:Interaction.Triggers>
+                    </ListBox>
+
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                        <Button hc:IconElement.Geometry="{StaticResource LeftGeometry}" Command="{Binding RemoveSelectedServiceCommand}" />
+                        <Button
+                            Margin="0,10,0,0"
+                            hc:IconElement.Geometry="{StaticResource RightGeometry}"
+                            Command="{Binding SelectServiceCommand}" />
+                    </StackPanel>
+
+                </Grid>
+
+            </hc:TabItem>
+
+            <hc:TabItem Header="Выбор даты" IsEnabled="{Binding SelectedServices.Count, Mode=OneWay, Converter={converters:IntToBooleanConverter}}">
+
+                <hc:Interaction.Triggers>
+                    <hc:EventTrigger EventName="IsVisibleChanged">
+                        <hc:InvokeCommandAction Command="{Binding BarberChangedCommand}" />
+                    </hc:EventTrigger>
+                </hc:Interaction.Triggers>
+
+                <StackPanel
+                    Margin="10"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center">
+
+                    <StackPanel
+                        Grid.Row="0"
+                        Height="30"
+                        HorizontalAlignment="Center"
+                        Orientation="Horizontal">
+                        <TextBlock
+                            Margin="0,0,10,0"
+                            VerticalAlignment="Center"
+                            FontSize="16"
+                            Text="День записи" />
+
+                        <DatePicker
+                            Width="300"
+                            DisplayDateStart="{x:Static sys:DateTime.Now}"
+                            SelectedDate="{Binding SelectedDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+
+                        <Button
+                            Width="24"
+                            Height="24"
+                            Margin="5,0,0,0"
+                            Padding="0"
+                            hc:IconElement.Geometry="{StaticResource InfoGeometry}"
+                            IsEnabled="False"
+                            ToolTipService.BetweenShowDelay="0"
+                            ToolTipService.HorizontalOffset="30"
+                            ToolTipService.InitialShowDelay="0"
+                            ToolTipService.ShowOnDisabled="True">
+                            <Button.ToolTip>
+                                <StackPanel HorizontalAlignment="Center">
+
+                                    <StackPanel Orientation="Horizontal">
+                                        <RadioButton
+                                            Width="70"
+                                            Margin="0,10"
+                                            Padding="0"
+                                            hc:BorderElement.CornerRadius="3"
+                                            Content="9:30"
+                                            FontSize="16"
+                                            Style="{StaticResource RadioButtonIconBaseStyle}" />
+                                        <TextBlock
+                                            Margin="10,0,0,0"
+                                            VerticalAlignment="Center"
+                                            Text="Свободное время для записи" />
+                                    </StackPanel>
+
+                                    <StackPanel Height="70" Orientation="Horizontal">
+                                        <RadioButton
+                                            Width="70"
+                                            Margin="0,10"
+                                            Padding="0"
+                                            hc:BorderElement.CornerRadius="3"
+                                            Content="9:30"
+                                            FontSize="16"
+                                            IsEnabled="False"
+                                            Style="{StaticResource RadioButtonSameAsButtonPrimary}" />
+                                        <TextBlock
+                                            Width="300"
+                                            Margin="10,0,0,0"
+                                            VerticalAlignment="Center"
+                                            Text="Потенциально свободное время при меньшем количестве услгу"
+                                            TextWrapping="WrapWithOverflow" />
+                                    </StackPanel>
+
+                                    <StackPanel Orientation="Horizontal">
+                                        <RadioButton
+                                            Width="70"
+                                            Margin="0,10"
+                                            Padding="0"
+                                            hc:BorderElement.CornerRadius="3"
+                                            Content="9:30"
+                                            FontSize="16"
+                                            IsEnabled="False"
+                                            Style="{StaticResource RadioButtonIconBaseStyle}" />
+                                        <TextBlock
+                                            Margin="10,0,0,0"
+                                            VerticalAlignment="Center"
+                                            Text="Время занято" />
+                                    </StackPanel>
+
+                                </StackPanel>
+                            </Button.ToolTip>
+                        </Button>
+                    </StackPanel>
+
+                    <ItemsControl
+                        Grid.Row="1"
+                        Margin="0,30,0,0"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        d:ItemsSource="{d:SampleData ItemCount=24}"
+                        ItemsSource="{Binding TimeSlots}">
+
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <hc:WaterfallPanel
+                                    Width="500"
+                                    HorizontalAlignment="Center"
+                                    Groups="4"
+                                    Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+
+                                <RadioButton
+                                    Width="70"
+                                    Margin="0,10"
+                                    Padding="0"
+                                    d:Style="{StaticResource RadioButtonSameAsButtonPrimary}"
+                                    hc:BorderElement.CornerRadius="3"
+                                    Content="{Binding}"
+                                    FontSize="16"
+                                    GroupName="Slots"
+                                    IsEnabled="{Binding State, Mode=OneWay, Converter={converters:SlotStateToBooleanConverter}}"
+                                    Style="{Binding State, Converter={converters:SlotStateToStyleConverter}}">
+
+                                    <hc:Interaction.Triggers>
+                                        <hc:EventTrigger EventName="Checked">
+                                            <hc:EventToCommand Command="{Binding DataContext.SelectTimeSlotCommand, ElementName=control}" PassEventArgsToCommand="True" />
+                                        </hc:EventTrigger>
+                                    </hc:Interaction.Triggers>
+
+                                </RadioButton>
+
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+
+                    </ItemsControl>
+
+                </StackPanel>
+
+            </hc:TabItem>
+
+            <hc:TabItem Header="Подтверждение заказа" IsEnabled="{Binding CanCreateOrder, Mode=OneWay}">
+
+                <UniformGrid
+                    Margin="10"
+                    Columns="2"
+                    Rows="1">
+
+                    <StackPanel Margin="0,0,10,0">
+
+                        <hc:TextBox
+                            hc:TitleElement.Title="Клиент"
+                            hc:TitleElement.TitlePlacement="Top"
+                            FontSize="16"
+                            IsReadOnly="True"
+                            Text="{Binding SelectedClient, Mode=OneWay}" />
+
+                        <TextBlock
+                            Margin="8,20,0,3"
+                            d:Text="Старший мастер"
+                            FontSize="16"
+                            Text="{Binding SelectedBarber.SkillLevel, Converter={converters:EnumToDescriptionConverter}}" />
+
+                        <hc:TextBox
+                            Margin="0,0,0,10"
+                            hc:TitleElement.TitlePlacement="Top"
+                            FontSize="16"
+                            IsReadOnly="True"
+                            Text="{Binding SelectedBarber, Mode=OneWay}" />
+
+                        <StackPanel
+                            Margin="0,10"
+                            VerticalAlignment="Center"
+                            Orientation="Horizontal">
+                            <Image Width="30" Source="{StaticResource TimerImage}" />
+                            <Label
+                                VerticalAlignment="Center"
+                                d:Content="45м."
+                                Content="{Binding TotalMinutes, Converter={converters:IntToTimeStringConverter}}"
+                                FontSize="16"
+                                Style="{StaticResource BaseStyle}" />
+                        </StackPanel>
+
+                        <StackPanel
+                            Margin="0,10"
+                            VerticalAlignment="Center"
+                            Orientation="Horizontal">
+                            <Image Width="30" Source="{StaticResource MoneyImage}" />
+                            <Label
+                                VerticalAlignment="Center"
+                                d:Content="1560 р."
+                                Content="{Binding TotalCost, Converter={converters:DecimalToCurrencyConverter}}"
+                                FontSize="16"
+                                Style="{StaticResource BaseStyle}" />
+                        </StackPanel>
+
+                        <StackPanel
+                            Margin="0,10"
+                            VerticalAlignment="Center"
+                            Orientation="Horizontal">
+                            <Image Width="30" Source="{StaticResource DateImage}" />
+                            <Label
+                                VerticalAlignment="Center"
+                                FontSize="16"
+                                Style="{StaticResource BaseStyle}">
+
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Text="{Binding SelectedDate.Date, StringFormat=dd.MM.yyyy}" />
+                                    <TextBlock Text="  " />
+                                    <TextBlock Text="{Binding SelectedTimeSlot}" />
+                                </StackPanel>
+
+                            </Label>
+                        </StackPanel>
+
+                    </StackPanel>
+
+                    <Grid Margin="10,0,0,0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition />
+                            <RowDefinition Height="auto" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock FontSize="16" Text="Выбранные услуги" />
+
+                        <ListBox
+                            Grid.Row="1"
+                            Margin="0,10,0,10"
+                            ItemTemplate="{StaticResource ServiceDataTemplate}"
+                            ItemsSource="{Binding SelectedServices}"
+                            SelectionMode="Single" />
+
+                        <Button
+                            Grid.Row="2"
+                            Width="180"
+                            Padding="0"
+                            HorizontalAlignment="Right"
+                            VerticalAlignment="Center"
+                            Command="{Binding CreateOrderCommand}"
+                            Content="Создать заказ"
+                            FontSize="16"
+                            FontWeight="DemiBold"
+                            Style="{StaticResource ButtonSuccess}" />
+
+                    </Grid>
+
+                </UniformGrid>
+
+            </hc:TabItem>
+
+        </hc:TabControl>
+
+    </Grid>
+
+</UserControl>

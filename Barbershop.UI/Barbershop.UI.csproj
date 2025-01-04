@@ -1,0 +1,67 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+    <ApplicationIcon>Resources\Images\Icon.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\Images\admin.png" />
+    <None Remove="Resources\Images\armchair.png" />
+    <None Remove="Resources\Images\barber.png" />
+    <None Remove="Resources\Images\client.png" />
+    <None Remove="Resources\Images\date.png" />
+    <None Remove="Resources\Images\home.png" />
+    <None Remove="Resources\Images\Icon.ico" />
+    <None Remove="Resources\Images\knife.png" />
+    <None Remove="Resources\Images\largeIcon.png" />
+    <None Remove="Resources\Images\menu.png" />
+    <None Remove="Resources\Images\money.png" />
+    <None Remove="Resources\Images\product.png" />
+    <None Remove="Resources\Images\salary.png" />
+    <None Remove="Resources\Images\schedule.png" />
+    <None Remove="Resources\Images\service.png" />
+    <None Remove="Resources\Images\timer.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DevExpressMvvm" Version="23.2.3" />
+    <PackageReference Include="HandyControls" Version="3.5.2" />
+    <PackageReference Include="HandyControls.Lang.ru" Version="3.5.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.20">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Barbershop.Contracts\Barbershop.Contracts.csproj" />
+    <ProjectReference Include="..\Barbershop.DAL\Barbershop.DAL.csproj" />
+    <ProjectReference Include="..\Barbershop.Services\Barbershop.Services.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Resources\Images\admin.png" />
+    <Resource Include="Resources\Images\armchair.png" />
+    <Resource Include="Resources\Images\barber.png" />
+    <Resource Include="Resources\Images\client.png" />
+    <Resource Include="Resources\Images\date.png" />
+    <Resource Include="Resources\Images\home.png" />
+    <Resource Include="Resources\Images\Icon.ico" />
+    <Resource Include="Resources\Images\knife.png" />
+    <Resource Include="Resources\Images\largeIcon.png" />
+    <Resource Include="Resources\Images\menu.png" />
+    <Resource Include="Resources\Images\money.png" />
+    <Resource Include="Resources\Images\product.png" />
+    <Resource Include="Resources\Images\salary.png" />
+    <Resource Include="Resources\Images\schedule.png" />
+    <Resource Include="Resources\Images\service.png" />
+    <Resource Include="Resources\Images\timer.png" />
+  </ItemGroup>
+
+</Project>

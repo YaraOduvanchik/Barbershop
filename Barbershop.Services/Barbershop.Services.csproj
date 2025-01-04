@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="12.0.0" />
+    <PackageReference Include="AutoMapper.Extensions.EnumMapping" Version="3.0.0" />
+    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Barbershop.Contracts\Barbershop.Contracts.csproj" />
+    <ProjectReference Include="..\Barbershop.DAL\Barbershop.DAL.csproj" />
+    <ProjectReference Include="..\Barbershop.Services.Abstractions\Barbershop.Services.Abstractions.csproj" />
+  </ItemGroup>
+
+</Project>

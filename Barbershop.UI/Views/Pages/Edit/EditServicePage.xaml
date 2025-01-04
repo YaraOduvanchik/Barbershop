@@ -1,0 +1,188 @@
+﻿<UserControl
+    x:Class="Barbershop.UI.Views.Pages.Edit.EditServicePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:culture="clr-namespace:System.Globalization;assembly=System.Globalization"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:local="clr-namespace:Barbershop.UI.Views.Pages.Edit"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="clr-namespace:Barbershop.Contracts.Models;assembly=Barbershop.Contracts"
+    xmlns:vm="clr-namespace:Barbershop.UI.ViewModels.Pages.Edit"
+    x:Name="control"
+    Width="700"
+    Height="225"
+    d:Background="White"
+    d:DataContext="{d:DesignInstance vm:EditServiceViewModel}"
+    mc:Ignorable="d">
+    <Grid>
+        <Grid.Resources>
+            <Style TargetType="{x:Type TextBlock}">
+                <Setter Property="HorizontalAlignment" Value="Left" />
+                <Setter Property="Margin" Value="3,10,3,2" />
+            </Style>
+            <Style TargetType="{x:Type StackPanel}">
+                <Setter Property="Margin" Value="5" />
+            </Style>
+        </Grid.Resources>
+
+        <StackPanel>
+            <TextBlock d:DataContext="{d:DesignInstance {x:Type models:ServiceDto}}" Text="Название" />
+            <TextBox Text="{Binding Item.Name}" />
+
+            <UniformGrid
+                Height="150"
+                Margin="0,13,0,0"
+                Columns="3"
+                Rows="1">
+
+                <UniformGrid.Resources>
+                    <Style BasedOn="{StaticResource ButtonBaseBaseStyle}" TargetType="Button">
+                        <Setter Property="Width" Value="28" />
+                        <Setter Property="Height" Value="28" />
+                        <Setter Property="Padding" Value="0" />
+                    </Style>
+                </UniformGrid.Resources>
+
+
+                <!--  Начинающий  -->
+                <StackPanel>
+
+                    <StackPanel HorizontalAlignment="Center">
+                        <Button
+                            Command="{Binding RemoveJuniorServiceCommand}"
+                            Content="Удалить"
+                            Style="{StaticResource ButtonDashedDanger}"
+                            Visibility="{Binding Item.JuniorSkill, Mode=OneWay, Converter={StaticResource Object2VisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                        <Button
+                            Command="{Binding AddJuniorServiceCommand}"
+                            Content="Добавить"
+                            Style="{StaticResource ButtonDashedSuccess}"
+                            Visibility="{Binding Item.JuniorSkill, Mode=OneWay, Converter={StaticResource Object2VisibilityReConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock Text="Младший мастер" />
+                    </StackPanel>
+
+                    <StackPanel Visibility="{Binding Item.JuniorSkill, Converter={StaticResource Object2VisibilityConverter}}">
+                        <Grid>
+                            <Image
+                                Width="26"
+                                Height="26"
+                                HorizontalAlignment="Left"
+                                Source="{StaticResource TimerImage}" />
+                            <hc:NumericUpDown
+                                Margin="40,0,0,0"
+                                Minimum="0"
+                                Value="{Binding Item.JuniorSkill.MinutesDuration}" />
+                        </Grid>
+
+                        <Grid Margin="0,10,0,0">
+                            <Image
+                                Width="26"
+                                Height="26"
+                                HorizontalAlignment="Left"
+                                Source="{StaticResource MoneyImage}" />
+                            <hc:NumericUpDown
+                                Margin="40,0,0,0"
+                                Minimum="0"
+                                Value="{Binding Item.JuniorSkill.Cost}" />
+                        </Grid>
+                    </StackPanel>
+
+                </StackPanel>
+
+                <!--  Средний  -->
+                <StackPanel>
+
+                    <StackPanel HorizontalAlignment="Center">
+                        <Button
+                            HorizontalAlignment="Center"
+                            Command="{Binding RemoveMiddleServiceCommand}"
+                            Content="Удалить"
+                            Style="{StaticResource ButtonDashedDanger}"
+                            Visibility="{Binding Path=Item.MiddleSkill, Mode=OneWay, Converter={StaticResource Object2VisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                        <Button
+                            Command="{Binding AddMiddleServiceCommand}"
+                            Content="Добавить"
+                            Style="{StaticResource ButtonDashedSuccess}"
+                            Visibility="{Binding Path=Item.MiddleSkill, Mode=OneWay, Converter={StaticResource Object2VisibilityReConverter}, UpdateSourceTrigger=PropertyChanged}" />
+                        <TextBlock HorizontalAlignment="Center" Text="Мастер" />
+                    </StackPanel>
+
+                    <StackPanel Visibility="{Binding Item.MiddleSkill, Converter={StaticResource Object2VisibilityConverter}}">
+                        <Grid>
+                            <Image
+                                Width="26"
+                                Height="26"
+                                HorizontalAlignment="Left"
+                                Source="{StaticResource TimerImage}" />
+                            <hc:NumericUpDown
+                                Margin="40,0,0,0"
+                                Minimum="0"
+                                Value="{Binding Item.MiddleSkill.MinutesDuration}" />
+                        </Grid>
+
+                        <Grid Margin="0,10,0,0">
+                            <Image
+                                Width="26"
+                                Height="26"
+                                HorizontalAlignment="Left"
+                                Source="{StaticResource MoneyImage}" />
+                            <hc:NumericUpDown
+                                Margin="40,0,0,0"
+                                Minimum="0"
+                                Value="{Binding Item.MiddleSkill.Cost}" />
+                        </Grid>
+                    </StackPanel>
+
+                </StackPanel>
+
+                <!--  Старший  -->
+                <StackPanel>
+
+                    <StackPanel HorizontalAlignment="Center">
+                        <Button
+                            Command="{Binding RemoveSerniorServiceCommand}"
+                            Content="Удалить"
+                            Style="{StaticResource ButtonDashedDanger}"
+                            Visibility="{Binding Item.SeniorSkill, Converter={StaticResource Object2VisibilityConverter}}" />
+                        <Button
+                            Command="{Binding AddSeniorServiceCommand}"
+                            Content="Добавить"
+                            Style="{StaticResource ButtonDashedSuccess}"
+                            Visibility="{Binding Item.SeniorSkill, Converter={StaticResource Object2VisibilityReConverter}}" />
+                        <TextBlock HorizontalAlignment="Center" Text="Старший мастер" />
+                    </StackPanel>
+
+                    <StackPanel Visibility="{Binding Item.SeniorSkill, Converter={StaticResource Object2VisibilityConverter}}">
+                        <Grid>
+                            <Image
+                                Width="26"
+                                Height="26"
+                                HorizontalAlignment="Left"
+                                Source="{StaticResource TimerImage}" />
+                            <hc:NumericUpDown
+                                Margin="40,0,0,0"
+                                Minimum="0"
+                                Value="{Binding Item.SeniorSkill.MinutesDuration}" />
+                        </Grid>
+
+                        <Grid Margin="0,10,0,0">
+                            <Image
+                                Width="26"
+                                Height="26"
+                                HorizontalAlignment="Left"
+                                Source="{StaticResource MoneyImage}" />
+                            <hc:NumericUpDown
+                                Margin="40,0,0,0"
+                                Minimum="0"
+                                Value="{Binding Item.SeniorSkill.Cost}" />
+                        </Grid>
+                    </StackPanel>
+
+                </StackPanel>
+
+            </UniformGrid>
+
+        </StackPanel>
+    </Grid>
+</UserControl>

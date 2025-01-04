@@ -1,0 +1,129 @@
+﻿<Page
+    x:Class="Barbershop.UI.Views.Pages.CurrentBarberPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:Barbershop.UI.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:local="clr-namespace:Barbershop.UI.Views.Pages"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:pages="clr-namespace:Barbershop.UI.ViewModels.Pages"
+    Title="CurrentBarberPage"
+    d:Background="White"
+    d:DataContext="{d:DesignInstance Type=pages:CurrentBarberViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+
+    <hc:Interaction.Triggers>
+        <hc:EventTrigger EventName="Loaded">
+            <hc:InvokeCommandAction Command="{Binding LoadViewDataCommand}" />
+        </hc:EventTrigger>
+    </hc:Interaction.Triggers>
+
+    <Grid>
+        <Border
+            Grid.ColumnSpan="2"
+            Panel.ZIndex="10"
+            d:Visibility="Hidden"
+            Background="#33000000"
+            CornerRadius="10"
+            Visibility="{Binding IsUploading, Converter={StaticResource Boolean2VisibilityConverter}}">
+            <hc:LoadingCircle Style="{StaticResource LoadingCircleLight}" />
+        </Border>
+
+        <StackPanel
+            Grid.Column="1"
+            Margin="30"
+            VerticalAlignment="Center">
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="0.4*" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <Image
+                    Width="150"
+                    Height="200"
+                    HorizontalAlignment="Right"
+                    Source="{Binding CurrentBarber.Photo, Converter={converters:BytesToImageConverter}}" />
+
+                <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                    <Label
+                        Margin="0,5"
+                        Padding="0"
+                        HorizontalAlignment="Center"
+                        d:Content="Фамилия Имя Отчество"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Content="{Binding CurrentBarber}"
+                        FontSize="24" />
+                    <Label
+                        Margin="0,5"
+                        Padding="0"
+                        HorizontalAlignment="Center"
+                        d:Content="Старший мастер"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Content="{Binding CurrentBarber.SkillLevel, Converter={converters:EnumToDescriptionConverter}}"
+                        FontSize="16" />
+                    <Label
+                        Margin="0,5"
+                        Padding="0"
+                        HorizontalAlignment="Center"
+                        d:Content="89123451122"
+                        Background="Transparent"
+                        BorderThickness="0"
+                        Content="{Binding CurrentBarber.PhoneNumber}"
+                        FontSize="14" />
+                </StackPanel>
+
+            </Grid>
+
+
+
+
+            <UniformGrid Margin="0,30,0,0" Columns="3">
+
+                <StackPanel HorizontalAlignment="Center">
+                    <Label Margin="0,10" Content="Выполнено заказов" />
+                    <Label
+                        Width="60"
+                        Height="60"
+                        Padding="0"
+                        d:Content="49"
+                        hc:BorderElement.CornerRadius="17"
+                        Content="{Binding CompletedOrdersCount}"
+                        FontSize="22" />
+                </StackPanel>
+
+                <StackPanel HorizontalAlignment="Center">
+                    <Label Margin="0,10" Content="Оказано услуг" />
+                    <Label
+                        Width="60"
+                        Height="60"
+                        Padding="0"
+                        d:Content="67"
+                        hc:BorderElement.CornerRadius="17"
+                        Content="{Binding CompletedServicesCount}"
+                        FontSize="22" />
+                </StackPanel>
+
+                <StackPanel HorizontalAlignment="Center">
+                    <Label Margin="0,10" Content="Продано товаров" />
+                    <Label
+                        Width="60"
+                        Height="60"
+                        Padding="0"
+                        d:Content="55"
+                        hc:BorderElement.CornerRadius="17"
+                        Content="{Binding CompletedProductsCount}"
+                        FontSize="22" />
+                </StackPanel>
+
+            </UniformGrid>
+
+        </StackPanel>
+    </Grid>
+</Page>

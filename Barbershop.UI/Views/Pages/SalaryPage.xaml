@@ -1,0 +1,211 @@
+﻿<Page
+    x:Class="Barbershop.UI.Views.Pages.SalaryPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:converters="clr-namespace:Barbershop.UI.Converters"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:local="clr-namespace:Barbershop.UI.Views.Pages"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:vm="clr-namespace:Barbershop.UI.ViewModels.Pages"
+    Title="SalaryPage"
+    d:Background="White"
+    d:DataContext="{d:DesignInstance Type=vm:SalaryPageViewModel}"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
+
+    <hc:Interaction.Triggers>
+        <hc:EventTrigger EventName="Loaded">
+            <hc:InvokeCommandAction Command="{Binding LoadViewDataCommand}" />
+        </hc:EventTrigger>
+    </hc:Interaction.Triggers>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="150" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+
+        <Border
+            Panel.ZIndex="10"
+            d:Visibility="Hidden"
+            Background="#33000000"
+            CornerRadius="10"
+            Visibility="{Binding IsUploading, Converter={StaticResource Boolean2VisibilityConverter}}">
+            <hc:LoadingCircle Style="{StaticResource LoadingCircleLight}" />
+        </Border>
+
+        <GroupBox Grid.Row="0" Margin="0,0,0,5">
+            <GroupBox.Header>
+                <TextBlock
+                    FontSize="16"
+                    FontWeight="DemiBold"
+                    Text="Фильтр" />
+            </GroupBox.Header>
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="40" />
+                </Grid.ColumnDefinitions>
+                <DockPanel Grid.Column="0">
+                    <RadioButton
+                        Margin="0,0,20,0"
+                        Content="За всё время"
+                        IsChecked="{Binding WithoutDateSelected}" />
+                    <RadioButton
+                        Margin="0,0,20,0"
+                        Content="Сегодня"
+                        IsChecked="{Binding TodayFilterSelected}" />
+                    <RadioButton
+                        Margin="0,0,20,0"
+                        Content="Последние 30 дней"
+                        IsChecked="{Binding Last30Days}" />
+                    <RadioButton
+                        Margin="0,0,20,0"
+                        Content="Текущий месяц"
+                        IsChecked="{Binding CurrentMonth}" />
+
+                    <StackPanel VerticalAlignment="Center">
+                        <hc:DatePicker
+                            Margin="0,0,0,2"
+                            hc:InfoElement.Placeholder="От"
+                            hc:InfoElement.ShowClearButton="True"
+                            SelectedDate="{Binding FromDateSelected}" />
+                        <hc:DatePicker
+                            Margin="0,2,0,0"
+                            hc:InfoElement.Placeholder="До"
+                            hc:InfoElement.ShowClearButton="True"
+                            SelectedDate="{Binding ToDateSelected}" />
+                    </StackPanel>
+
+                </DockPanel>
+
+                <Grid Grid.Column="1">
+                    <Button
+                        Width="23"
+                        Height="30"
+                        Margin="0,6,0,0"
+                        Padding="0"
+                        VerticalAlignment="Top"
+                        hc:IconElement.Geometry="{StaticResource RemoveGeometry}"
+                        Command="{Binding ClearFilterCommand}"
+                        Style="{StaticResource ButtonDashedDanger}" />
+                    <Button
+                        Width="23"
+                        Height="50"
+                        Margin="0,0,0,3"
+                        Padding="0"
+                        VerticalAlignment="Bottom"
+                        hc:IconElement.Geometry="{StaticResource SearchGeometry}"
+                        hc:IconElement.Width="15"
+                        Command="{Binding FilterOrdersCommand}"
+                        DockPanel.Dock="Bottom"
+                        Style="{StaticResource ButtonSuccess}" />
+                </Grid>
+            </Grid>
+
+        </GroupBox>
+
+
+        <GroupBox Grid.Row="1">
+            <GroupBox.Header>
+                <TextBlock
+                    FontSize="16"
+                    FontWeight="DemiBold"
+                    Text="Выполненные заказы" />
+            </GroupBox.Header>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition />
+                    <RowDefinition Height="50" />
+                </Grid.RowDefinitions>
+
+                <DataGrid
+                    d:ItemsSource="{d:SampleData}"
+                    hc:DataGridAttach.ShowRowNumber="False"
+                    AutoGenerateColumns="False"
+                    ItemsSource="{Binding Orders, Mode=OneWay}">
+                    <DataGrid.Resources>
+                        <Style TargetType="{x:Type TextBlock}">
+                            <Setter Property="HorizontalAlignment" Value="Right" />
+                        </Style>
+                    </DataGrid.Resources>
+
+                    <DataGrid.Columns>
+                        <DataGridTextColumn
+                            Width="50"
+                            Binding="{Binding Id}"
+                            Header="#"
+                            IsReadOnly="True" />
+                        <DataGridTextColumn
+                            Binding="{Binding BeginDateTime, StringFormat=yyyy.MM.dd HH:mm}"
+                            Header="Дата"
+                            IsReadOnly="True" />
+                        <DataGridTextColumn
+                            Width="*"
+                            Binding="{Binding Client}"
+                            Header="Клиент"
+                            IsReadOnly="True" />
+                        <DataGridTextColumn
+                            Binding="{Binding TotalMinutes, Converter={converters:IntToTimeStringConverter}}"
+                            Header="Продолжительность"
+                            IsReadOnly="True" />
+                        <DataGridTextColumn
+                            Width="150"
+                            Binding="{Binding TotalServicesPrice, Mode=OneWay, Converter={converters:DecimalToCurrencyConverter}}"
+                            Header="Общая стоимость"
+                            IsReadOnly="True" />
+                        <DataGridTextColumn
+                            Width="100"
+                            Binding="{Binding BarbersGain}"
+                            Header="Ставка"
+                            IsReadOnly="True" />
+                        <DataGridTextColumn
+                            Width="150"
+                            Binding="{Binding PureCost, Mode=OneWay, Converter={converters:DecimalToCurrencyConverter}}"
+                            Header="Доход"
+                            IsReadOnly="True" />
+                    </DataGrid.Columns>
+                </DataGrid>
+
+
+                <UniformGrid Grid.Row="1" Columns="2">
+
+                    <StackPanel
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal"
+                        ToolTip="Суммарное время выполненных заказов">
+                        <Image Width="30" Source="{StaticResource TimerImage}" />
+                        <Label
+                            VerticalAlignment="Center"
+                            d:Content="45м."
+                            Content="{Binding TotalMinutes, Converter={converters:IntToTimeStringConverter}}"
+                            FontSize="16"
+                            Style="{StaticResource BaseStyle}" />
+                    </StackPanel>
+
+                    <StackPanel
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center"
+                        Orientation="Horizontal"
+                        ToolTip="Общий заработок за выбранный период">
+                        <Image Width="30" Source="{StaticResource MoneyImage}" />
+                        <Label
+                            d:Content="1560 р."
+                            Content="{Binding TotalCost, Converter={converters:DecimalToCurrencyConverter}}"
+                            FontSize="16"
+                            Style="{StaticResource BaseStyle}" />
+                    </StackPanel>
+
+                </UniformGrid>
+            </Grid>
+
+
+        </GroupBox>
+
+    </Grid>
+</Page>

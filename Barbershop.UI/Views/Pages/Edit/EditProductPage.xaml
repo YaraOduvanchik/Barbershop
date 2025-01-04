@@ -1,0 +1,38 @@
+﻿<UserControl
+    x:Class="Barbershop.UI.Views.Pages.Edit.EditProductPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:culture="clr-namespace:System.Globalization;assembly=System.Globalization"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:hc="https://handyorg.github.io/handycontrol"
+    xmlns:local="clr-namespace:Barbershop.UI.Views.Pages.Edit"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:models="clr-namespace:Barbershop.Contracts.Models;assembly=Barbershop.Contracts"
+    x:Name="control"
+    Width="350"
+    Height="150"
+    d:Background="White"
+    mc:Ignorable="d">
+    <Grid d:DataContext="{d:DesignInstance {x:Type models:ProductDto}}" DataContext="{Binding Item}">
+        <Grid.Resources>
+            <Style TargetType="{x:Type TextBlock}">
+                <Setter Property="HorizontalAlignment" Value="Left" />
+                <Setter Property="Margin" Value="3,10,3,2" />
+            </Style>
+            <Style TargetType="{x:Type StackPanel}">
+                <Setter Property="Margin" Value="5" />
+            </Style>
+        </Grid.Resources>
+        <StackPanel>
+            <TextBlock Text="Название" />
+            <TextBox Text="{Binding Name}" />
+            <TextBlock><Run Text="Стоимость, " /><Run Text=" " /><Run Text="{Binding NumberFormat.CurrencySymbol, Source={x:Static culture:CultureInfo.CurrentCulture}}" /></TextBlock>
+            <hc:NumericUpDown
+                DecimalPlaces="2"
+                Increment="1"
+                Minimum="0"
+                ValueFormat="N2"
+                Value="{Binding Cost}" />
+        </StackPanel>
+    </Grid>
+</UserControl>
